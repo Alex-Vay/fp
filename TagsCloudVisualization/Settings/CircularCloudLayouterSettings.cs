@@ -1,0 +1,5 @@
+﻿using TagsCloudVisualization.CloudLayouter.PointsGenerators;
+
+namespace TagsCloudVisualization.Settings;
+
+public record CircularCloudLayouterSettings(IPointsGenerator Generator);

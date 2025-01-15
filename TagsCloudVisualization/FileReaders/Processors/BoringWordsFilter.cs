@@ -6,7 +6,7 @@ public class BoringWordsFilter : ITextProcessor
 {
     private HashSet<string> boringPartsOfSpeeches = new() { "PR", "PART", "CONJ" };
 
-    public List<string> ProcessText(List<string> text)
+    public Result<List<string>> ProcessText(List<string> text)
     {
         var result = new List<string>();
         var stem = MyStem();

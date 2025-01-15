@@ -1,6 +1,4 @@
 ﻿using System.Drawing;
-using System.Globalization;
-using System.Text;
 using CommandLine;
 using TagsCloudVisualization.Visualizers.ImageColoring;
 
@@ -28,11 +26,6 @@ public class Options
     {
         get
         {
-            if (Width <= 0 || Height <= 0)
-            {
-                throw new ArgumentException($"Invalid dimensions: Width={Width}, Height={Height}. Both must be positive integers.");
-            }
-
             return new Size(Width, Height);
         }
     }

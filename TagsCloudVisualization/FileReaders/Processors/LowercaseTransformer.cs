@@ -2,6 +2,6 @@
 
 public class LowercaseTransformer : ITextProcessor
 {
-    public List<string> ProcessText(List<string> text) =>
+    public Result<List<string>> ProcessText(List<string> text) =>
         text.Select(word => word.ToLower()).ToList();
 }

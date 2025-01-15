@@ -2,5 +2,5 @@
 
 public interface ITextProcessor
 {
-    public List<string> ProcessText(List<string> text);
+    public Result<List<string>> ProcessText(List<string> text);
 }

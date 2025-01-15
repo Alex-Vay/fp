@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using TagsCloudVisualization;
 using TagsCloudVisualization.FileReaders;
 using TagsCloudVisualization.Settings;
 
@@ -14,7 +15,7 @@ public class CsvFileReaderTests
 
         var result = reader.ReadLines();
 
-        result.Should().BeEquivalentTo("Всем", "Привет", "Этот", "файл", "должен", "обрабатываться", "корректно");
+        result.Then(r => r.Should().BeEquivalentTo("Всем", "Привет", "Этот", "файл", "должен", "обрабатываться", "корректно"));
     }
 
     [Test]
@@ -23,8 +24,7 @@ public class CsvFileReaderTests
         var fileReaderSettings = new CsvFileReaderSettings("text ttt ty");
         var reader = new CsvFileReader(fileReaderSettings);
 
-        Action act = () => reader.ReadLines();
-
-        act.Should().Throw<FileNotFoundException>();
+        reader.ReadLines().OnFail(err => err.Should()
+            .BeEquivalentTo("File not found"));
     }
 }

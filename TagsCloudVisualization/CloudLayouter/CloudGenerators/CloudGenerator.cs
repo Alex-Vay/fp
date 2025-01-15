@@ -17,18 +17,24 @@ public class CloudGenerator(
     {
         var text = reader.ReadLines();
         foreach (var processor in processors)
-            text = processor.ProcessText(text);
+            text = text.Then(processor.ProcessText);
 
         var frequencyDict = text
+            .Then(w => w
             .GroupBy(word => word)
             .OrderByDescending(group => group.Count())
-            .ToDictionary(group => group.Key, group => group.Count());
+            .ToDictionary(group => group.Key, group => group.Count()));
 
-        var maxFrequency = frequencyDict.Values.Max();
-        var tagsList = frequencyDict.Select(pair => ToWordSize(pair, maxFrequency)).ToList();
-        var imageSavePath = saver.SaveImage(imageCreator.CreateBitmap(tagsList));
-
-        Console.WriteLine("File saved in " + imageSavePath);
+        frequencyDict
+            .Then(dict =>
+            {
+                var maxFrequency = dict.Values.Max();
+                return dict.Select(pair => ToWordSize(pair, maxFrequency)).ToList();
+            })
+            .Then(imageCreator.CreateBitmap)
+            .Then(saver.SaveImage)
+            .Then(path => Console.WriteLine("File saved in " + path))
+            .OnFail(err => Console.WriteLine("Generating finished with error: " + err));
     }
 
     private WordSize ToWordSize(KeyValuePair<string, int> pair, int maxFreq)

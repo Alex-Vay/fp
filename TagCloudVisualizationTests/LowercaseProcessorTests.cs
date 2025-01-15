@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using System.Text;
+using TagsCloudVisualization;
 using TagsCloudVisualization.FileReaders;
 using TagsCloudVisualization.FileReaders.Processors;
 using TagsCloudVisualization.Settings;
@@ -18,8 +19,8 @@ public class LowercaseProcessorTests
         var reader = new TxtFileReader(fileReaderSettings);
 
         var text = reader.ReadLines();
-        var processed = processor.ProcessText(text);
-        
-        processed.Should().BeEquivalentTo("всем", "привет", "этот", "файл", "должен", "обрабатываться", "корректно");
+        var processed = text.Then(processor.ProcessText);
+
+        processed.Then(r => r.Should().BeEquivalentTo("всем", "привет", "этот", "файл", "должен", "обрабатываться", "корректно"));
     }
 }

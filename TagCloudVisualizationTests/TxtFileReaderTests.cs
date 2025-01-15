@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using FluentAssertions;
+using TagsCloudVisualization;
 using TagsCloudVisualization.FileReaders;
 using TagsCloudVisualization.Settings;
 
@@ -15,7 +16,7 @@ namespace TagsCloudVisualizationTests
 
             var result = reader.ReadLines();
 
-            result.Should().BeEquivalentTo("Всем", "Привет", "Этот", "файл", "должен", "обрабатываться", "корректно");
+            result.Then(r => r.Should().BeEquivalentTo("Всем", "Привет", "Этот", "файл", "должен", "обрабатываться", "корректно"));
         }
 
         [Test]
@@ -24,9 +25,8 @@ namespace TagsCloudVisualizationTests
             var fileReaderSettings = new TxtFileReaderSettings("text ttt ty");
             var reader = new TxtFileReader(fileReaderSettings);
 
-            Action act = () => reader.ReadLines();
-
-            act.Should().Throw<FileNotFoundException>();
+            reader.ReadLines().OnFail(err => err.Should()
+                .BeEquivalentTo("File not found"));
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using FluentAssertions;
+using System.Diagnostics;
+using TagsCloudVisualization;
 using TagsCloudVisualization.FileReaders;
 using TagsCloudVisualization.FileReaders.Processors;
 using TagsCloudVisualization.Settings;
@@ -24,9 +26,9 @@ public class BoringWordsFilterTests
     public void BoringWordFilter_FilterText_ShouldExcludeAllBoringWords()
     {
         var text = reader.ReadLines();
-        var filtered = filter.ProcessText(text);
+        var filtered = text.Then(filter.ProcessText);
 
-        filtered.Should().BeEquivalentTo("Привет", "файл", "должен", "обрабатываться", "корректно");
+        filtered.Then(r => r.Should().BeEquivalentTo("Привет", "файл", "должен", "обрабатываться", "корректно"));
     }
 
     [Test]
@@ -34,9 +36,9 @@ public class BoringWordsFilterTests
     {
         var text = reader.ReadLines();
         filter.AddBoringPartOfSpeech("S");
-        var filtered = filter.ProcessText(text);
+        var filtered = text.Then(filter.ProcessText);
 
-        filtered.Should().BeEquivalentTo("должен", "обрабатываться", "корректно");
+        filtered.Then(r => r.Should().BeEquivalentTo("должен", "обрабатываться", "корректно"));
     }
 
     [Test]
@@ -44,8 +46,8 @@ public class BoringWordsFilterTests
     {
         var text = reader.ReadLines();
         filter.AddBoringPartOfSpeech("должен");
-        var filtered = filter.ProcessText(text);
+        var filtered = text.Then(filter.ProcessText);
 
-        filtered.Should().BeEquivalentTo("Привет", "файл", "обрабатываться", "корректно");
+        filtered.Then(r => r.Should().BeEquivalentTo("Привет", "файл", "обрабатываться", "корректно"));
     }
 }

@@ -14,8 +14,11 @@ public class CsvFileReader(CsvFileReaderSettings settings) : IFileReader
         public string Word { get; set; }
     }
 
-    public List<string> ReadLines()
+    public Result<List<string>> ReadLines()
     {
+        if (!File.Exists(settings.FilePath))
+            return Result.Fail<List<string>>("File not found");
+
         var configuration = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
             HasHeaderRecord = false

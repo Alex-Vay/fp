@@ -13,6 +13,7 @@ internal class Program
 {
     public static void Main(string[] args)
     {
+        args = "text.txt".Split();
         Parser.Default.ParseArguments<Options>(args)
             .WithParsed(settings =>
             {
@@ -60,7 +61,7 @@ internal class Program
         builder.Register<IFileReader>(context =>
         {
             var factory = context.Resolve<FileReadersFactory>();
-            return factory.CreateReader();
+            return factory.CreateReader().GetValueOrThrow();
         })
         .SingleInstance();
     }

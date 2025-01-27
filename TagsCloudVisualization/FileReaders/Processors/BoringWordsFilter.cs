@@ -14,9 +14,11 @@ public class BoringWordsFilter : ITextProcessor
         {
             stem.StandardInput.Write($"{word}\n");
             var wordInfo = stem.StandardOutput.ReadLine();
-            var infoStart = wordInfo.IndexOf("{");
             if (wordInfo is not null && !IsBoring(wordInfo))
+            {
+                var infoStart = wordInfo.IndexOf("{");
                 result.Add(wordInfo.Substring(0, infoStart));
+            }    
         }
         stem.Close();
         stem.Dispose();

@@ -10,7 +10,7 @@ public class Options
     [Option('o', "output-path",
     Required = false,
     HelpText = "Image output path")]
-    public string OutputPath { get; set; } = null;
+    public string OutputPath { get; set; } = "default";
 
     [Option('w', "width",
     Required = false,
@@ -76,7 +76,7 @@ public class Options
             "black" => new BlackColoring(),
             "random" => new RandomColoring(),
             _ when char.IsDigit(colotStr[0]) =>
-                new CustumSingleColoring(
+                new CustomSingleColoring(
                     Color.FromArgb(255,
                     Color.FromArgb(Convert.ToInt32(colotStr, 16)))),
             _ => throw new ArgumentException($"Invalid color type: '{colotStr}'. Use 'black' or 'random'.")

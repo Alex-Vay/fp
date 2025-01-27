@@ -9,8 +9,6 @@ public class CircularCloudLayouter(IPointsGenerator pointGenerator) : ICircularC
 
     public Rectangle PutNextRectangle(Size rectangleSize)
     {
-        if (rectangleSize.Width <= 0 || rectangleSize.Height <= 0)
-            throw new ArgumentException($"{nameof(rectangleSize)} height and width must be greater than zero");
         Rectangle rectangle;
         do
         {

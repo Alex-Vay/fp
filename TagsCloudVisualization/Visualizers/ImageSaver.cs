@@ -12,7 +12,7 @@ public class ImageSaver(ImageSaveSettings settings)
             return Result.Fail<string>($"Unsupported image format: {settings.ImageFormat}");
 
         var fullImageName = $"{settings.ImageName}.{settings.ImageFormat}";
-        if (settings.OutputPath == null)
+        if (settings.OutputPath == "default")
         {
             image.Save(fullImageName);
             return Result.Ok(Path.Combine(Directory.GetCurrentDirectory(), fullImageName));

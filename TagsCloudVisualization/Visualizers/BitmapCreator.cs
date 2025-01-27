@@ -28,43 +28,23 @@ public class BitmapCreator
     {
         var width = size.Width;
         var height = size.Height;
-        var bitmap = (width < 0 || height < 0)
-            ? Result.Fail<Bitmap>("Width and height should be positive")
-            : new Bitmap(width, height).AsResult();
+        if (width < 0 || height < 0)
+            return Result.Fail<Bitmap>("Width and height should be positive");
+        var bitmap = new Bitmap(width, height).AsResult();
 
-        return bitmap.Then(b =>
+        using var graphics = Graphics.FromImage(bitmap.Value);
+        graphics.Clear(background.GetNextColor());
+        foreach (var word in text)
         {
-            using var graphics = Graphics.FromImage(b);
-            graphics.Clear(background.GetNextColor());
-            var result = ProcessTags(text, graphics)
-                .FirstOrDefault(r => !r.IsSuccess, Result.Ok());
-            return result.IsSuccess ? bitmap : Result.Fail<Bitmap>(result.Error!);
-        });
+            var wordColor = new SolidBrush(coloring.GetNextColor());
+            var font = new Font(family, word.FontSize);
+            var wordSize = CeilSize(graphics.MeasureString(word.Word, font));
+            var rectPosition = layouter.PutNextRectangle(wordSize);
+            graphics.DrawRectangle(new Pen(Color.White), rectPosition);
+            graphics.DrawString(word.Word, font, wordColor, rectPosition);
+        }
+        return bitmap;
     }
-
-    private Result<Font> BuildFont(int fontSize)
-        => fontSize > 0
-            ? new Font(family, fontSize).AsResult()
-            : Result.Fail<Font>("Cannot generate font with negative size");
-
-    private IEnumerable<Result<None>> ProcessTags(List<WordSize> tags, Graphics graphics)
-        => tags.Select(t => BuildFont(t.FontSize).Then(f => DrawTag(f, t, graphics)));
-
-    private Result<None> DrawTag(Font font, WordSize wordSize, Graphics graphics)
-        => font.AsResult()
-            .Then(font => CeilSize(graphics.MeasureString(wordSize.Word, font)))
-            .Then(layouter.PutNextRectangle).Then(FitsInRange)
-            .Then(rect =>
-            {
-                var wordColor = new SolidBrush(coloring.GetNextColor());
-                graphics.DrawRectangle(new Pen(Color.White), rect);
-                graphics.DrawString(wordSize.Word, font, wordColor, rect);
-            });
-
-    private Result<Rectangle> FitsInRange(Rectangle rect)
-        => new Rectangle(Point.Empty, size).Contains(rect)
-            ? Result.Ok(rect)
-            : Result.Fail<Rectangle>("Cannot fit in the given size");
 
     private static Size CeilSize(SizeF size)
         => new((int)size.Width + 1, (int)size.Height + 1);

@@ -28,10 +28,10 @@ public class CircularCloudLayouterTests
         var pointGenerator = new SpiralPointsGenerator(pointGeneratorSettings);
         cloudLayouter = new CircularCloudLayouter(pointGenerator);
 
-        var fileReaderSettings = new TxtFileReaderSettings("./../../../TestData/text.txt");
+        var fileReaderSettings = new TxtFileReaderSettings("TestData/text.txt");
         var fileReader = new TxtFileReader(fileReaderSettings);
 
-        var imageSaverSettings = new ImageSaveSettings("test", "png", null);
+        var imageSaverSettings = new ImageSaveSettings("test", "png", "default");
         var imageSaver = new ImageSaver(imageSaverSettings);
 
         var imageSettings = new ImageSettings(
@@ -40,19 +40,6 @@ public class CircularCloudLayouterTests
         var imageGenerator = new BitmapCreator(imageSettings, cloudLayouter);
         List<ITextProcessor> processors = [new LowercaseTransformer(), new BoringWordsFilter()];
         cloudGenerator = new CloudGenerator(imageSaver, fileReader, imageGenerator, processors);
-    }
-
-    [TestCase(0, 1, TestName = "WhenWidthIsZero")]
-    [TestCase(1, 0, TestName = "WhenHeightIsZero")]
-    [TestCase(-1, 1, TestName = "WhenWidthIsNegative")]
-    [TestCase(1, -1, TestName = "WhenHeightIsNegative")]
-    public void PutNextRectangle_ShouldThrowArgumentException(int width, int height)
-    {
-        var size = new Size(width, height);
-
-        var action = () => cloudLayouter.PutNextRectangle(size);
-
-        action.Should().Throw<ArgumentException>();
     }
 
     [Test]

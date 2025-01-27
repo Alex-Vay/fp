@@ -10,7 +10,7 @@ namespace TagsCloudVisualizationTests;
 [TestFixture]
 public class BoringWordsFilterTests
 {
-    private string path = "./../../../TestData/text.txt";
+    private string path = "TestData/text.txt";
     private TxtFileReader reader;
     private BoringWordsFilter filter;
 
@@ -28,7 +28,8 @@ public class BoringWordsFilterTests
         var text = reader.ReadLines();
         var filtered = text.Then(filter.ProcessText);
 
-        filtered.Then(r => r.Should().BeEquivalentTo("Привет", "файл", "должен", "обрабатываться", "корректно"));
+        filtered.IsSuccess.Should().BeTrue();
+        filtered.GetValueOrThrow().Should().BeEquivalentTo("Привет", "файл", "должен", "обрабатываться", "корректно");
     }
 
     [Test]
@@ -38,7 +39,8 @@ public class BoringWordsFilterTests
         filter.AddBoringPartOfSpeech("S");
         var filtered = text.Then(filter.ProcessText);
 
-        filtered.Then(r => r.Should().BeEquivalentTo("должен", "обрабатываться", "корректно"));
+        filtered.IsSuccess.Should().BeTrue();
+        filtered.GetValueOrThrow().Should().BeEquivalentTo("должен", "обрабатываться", "корректно");
     }
 
     [Test]
@@ -48,6 +50,7 @@ public class BoringWordsFilterTests
         filter.AddBoringPartOfSpeech("должен");
         var filtered = text.Then(filter.ProcessText);
 
-        filtered.Then(r => r.Should().BeEquivalentTo("Привет", "файл", "обрабатываться", "корректно"));
+        filtered.IsSuccess.Should().BeTrue();
+        filtered.GetValueOrThrow().Should().BeEquivalentTo("Привет", "файл", "обрабатываться", "корректно");
     }
 }

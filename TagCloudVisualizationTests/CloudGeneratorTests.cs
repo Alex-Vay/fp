@@ -27,7 +27,7 @@ public class CloudGeneratorTest
 
     private static CloudGenerator InitGenerator()
     {
-        var fileReaderSettings = new TxtFileReaderSettings("./../../../TestData/text.txt");
+        var fileReaderSettings = new TxtFileReaderSettings("TestData/text.txt");
         var fileReader = new TxtFileReader(fileReaderSettings);
         var imageSaverSettings = new ImageSaveSettings("test", "png", null);
         var imageSaver = new ImageSaver(imageSaverSettings);

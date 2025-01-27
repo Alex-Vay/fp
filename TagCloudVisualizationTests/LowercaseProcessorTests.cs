@@ -15,12 +15,13 @@ public class LowercaseProcessorTests
     [Test]
     public void LowercaseProcessor_ProcessText_ShouldLowercaseAllWords()
     {
-        var fileReaderSettings = new TxtFileReaderSettings("./../../../TestData/text.txt");
+        var fileReaderSettings = new TxtFileReaderSettings("TestData/text.txt");
         var reader = new TxtFileReader(fileReaderSettings);
 
         var text = reader.ReadLines();
         var processed = text.Then(processor.ProcessText);
 
-        processed.Then(r => r.Should().BeEquivalentTo("всем", "привет", "этот", "файл", "должен", "обрабатываться", "корректно"));
+        processed.IsSuccess.Should().BeTrue();
+        processed.GetValueOrThrow().Should().BeEquivalentTo("всем", "привет", "этот", "файл", "должен", "обрабатываться", "корректно");
     }
 }

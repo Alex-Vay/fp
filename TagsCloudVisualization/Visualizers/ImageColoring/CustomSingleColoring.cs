@@ -2,7 +2,7 @@
 
 namespace TagsCloudVisualization.Visualizers.ImageColoring;
 
-public class CustumSingleColoring(Color color) : IImageColoring
+public class CustomSingleColoring(Color color) : IImageColoring
 {
     public Color GetNextColor() => color;
 }

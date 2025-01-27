@@ -11,12 +11,13 @@ namespace TagsCloudVisualizationTests
         [Test]
         public void ReadLines_ReturnCorrect_WhenReadWordsFromFile()
         {
-            var fileReaderSettings = new WordFileReaderSettings("./../../../TestData/text.docx");
+            var fileReaderSettings = new WordFileReaderSettings("TestData/text.docx");
             var reader = new WordFileReader(fileReaderSettings);
 
             var result = reader.ReadLines();
 
-            result.Then(r => r.Should().BeEquivalentTo("Всем", "Привет", "Этот", "файл", "должен", "обрабатываться", "корректно"));
+            result.IsSuccess.Should().BeTrue();
+            result.GetValueOrThrow().Should().BeEquivalentTo("Всем", "Привет", "Этот", "файл", "должен", "обрабатываться", "корректно");
         }
 
         [Test]
@@ -25,8 +26,10 @@ namespace TagsCloudVisualizationTests
             var fileReaderSettings = new WordFileReaderSettings("text ttt ty");
             var reader = new WordFileReader(fileReaderSettings);
 
-            reader.ReadLines().OnFail(err => err.Should()
-                .BeEquivalentTo("File not found"));
+            var result = reader.ReadLines();
+
+            result.IsSuccess.Should().BeFalse();
+            result.Error.Should().BeEquivalentTo("File not found");
         }
     }
 }

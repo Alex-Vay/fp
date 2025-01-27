@@ -9,7 +9,7 @@ public class FileReadersFactory(
     WordFileReaderSettings wordSettings,
     Options settings)
 {
-    public IFileReader CreateReader()
+    public Result<IFileReader> CreateReader()
     {
         var path = settings.FilePath;
         var extension = Path.GetExtension(path).ToLower();
@@ -19,7 +19,7 @@ public class FileReadersFactory(
             ".txt" => new TxtFileReader(txtSettings),
             ".csv" => new CsvFileReader(csvSettings),
             ".docx" => new WordFileReader(wordSettings),
-            _ => throw new InvalidOperationException($"Unsupported file extension: {extension}")
+            _ => Result.Fail<IFileReader>($"Unsupported file extension: {extension}")
         };
     }
 }

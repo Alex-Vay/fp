@@ -13,7 +13,6 @@ internal class Program
 {
     public static void Main(string[] args)
     {
-        args = "text.txt".Split();
         Parser.Default.ParseArguments<Options>(args)
             .WithParsed(settings =>
             {

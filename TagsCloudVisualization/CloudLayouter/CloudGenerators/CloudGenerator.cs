@@ -15,11 +15,11 @@ public class CloudGenerator(
 
     public void GenerateTagCloud()
     {
-        var text = ProcessText().GetValueOrThrow();
-        var frequencyDict = GetFrequencyDictionary(text);
+        var text = ProcessText().OnFail(GetReadableError);
+        var frequencyDict = GetFrequencyDictionary(text.Value);
         var wordSizes = GetWordSizes(frequencyDict);
-        var bitmap = imageCreator.CreateBitmap(wordSizes).GetValueOrThrow();
-        var savedPath = saver.SaveImage(bitmap).GetValueOrThrow();
+        var bitmap = imageCreator.CreateBitmap(wordSizes).OnFail(GetReadableError);
+        var savedPath = saver.SaveImage(bitmap.Value).OnFail(GetReadableError);
         Console.WriteLine("File saved in " + savedPath);
     }
 
@@ -56,5 +56,11 @@ public class CloudGenerator(
     {
         var fontSize = MinFontSize + (float)count / maxFrequency * (MaxFontSize - MinFontSize);
         return new WordSize(word, (int)fontSize);
+    }
+
+    private void GetReadableError(string error)
+    {
+        Console.WriteLine(error);
+        Environment.Exit(0);
     }
 }
